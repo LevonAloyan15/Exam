@@ -19,88 +19,87 @@ struct ControlBlock {
 template <typename T>
 class WeakPtr {
 public:
-    // Default constructor
     WeakPtr() noexcept {
-        ptr_ = nullptr;
-        control_ = nullptr;
+        m_ptr = nullptr;
+        m_control = nullptr;
     }
 
-    // Construct from SharedPtr
     WeakPtr(const SharedPtr<T>& sp) noexcept {
-        ptr_ = sp.ptr_;
-        control_ = sp.control_;
-        if (control_) {
-            control_->weak_count += 1;
+        m_ptr = sp.m_ptr;
+        m_control = sp.m_control;
+        if (m_control != nullptr) {
+            m_control->weak_count += 1;
         }
     }
 
-    // Copy constructor
     WeakPtr(const WeakPtr& other) noexcept {
-        ptr_ = other.ptr_;
-        control_ = other.control_;
-        if (control_) {
-            control_->weak_count += 1;
+        m_ptr = other.m_ptr;
+        m_control = other.m_control;
+        if (m_control != nullptr) {
+            m_control->weak_count += 1;
         }
     }
 
-    // Move constructor
     WeakPtr(WeakPtr&& other) noexcept {
-        ptr_ = other.ptr_;
-        control_ = other.control_;
-        other.ptr_ = nullptr;
-        other.control_ = nullptr;
+        m_ptr = other.m_ptr;
+        m_control = other.m_control;
+        other.m_ptr = nullptr;
+        other.m_control = nullptr;
     }
 
-    // Copy assignment
     WeakPtr& operator=(const WeakPtr& other) noexcept {
         if (this != &other) {
             reset();
-            ptr_ = other.ptr_;
-            control_ = other.control_;
-            if (control_) {
-                control_->weak_count += 1;
+            m_ptr = other.m_ptr;
+            m_control = other.m_control;
+            if (m_control != nullptr) {
+                m_control->weak_count += 1;
             }
         }
         return *this;
     }
 
-    // Move assignment
     WeakPtr& operator=(WeakPtr&& other) noexcept {
         if (this != &other) {
             reset();
-            ptr_ = other.ptr_;
-            control_ = other.control_;
-            other.ptr_ = nullptr;
-            other.control_ = nullptr;
+            m_ptr = other.m_ptr;
+            m_control = other.m_control;
+            other.m_ptr = nullptr;
+            other.m_control = nullptr;
         }
         return *this;
     }
 
-    // Assign from SharedPtr
     WeakPtr& operator=(const SharedPtr<T>& sp) noexcept {
         reset();
-        ptr_ = sp.ptr_;
-        control_ = sp.control_;
-        if (control_) {
-            control_->weak_count += 1;
+        m_ptr = sp.m_ptr;
+        m_control = sp.m_control;
+        if (m_control != nullptr) {
+            m_control->weak_count += 1;
         }
         return *this;
     }
 
-    // Destructor
     ~WeakPtr() {
         reset();
     }
 
-    // Returns number of strong references
     std::size_t use_count() const noexcept {
-        if (control_) return control_->strong_count;
-        return 0;
+        if (m_control != nullptr) {
+            return m_control->strong_count;
+        } else {
+            return 0;
+        }
     }
 
-    // Checks if the object is expired
     bool expired() const noexcept {
-        return !control_ || control_->strong_count == 0;
+        if (m_control == nullptr) {
+            return true;
+        }
+        if (m_control->strong_count == 0) {
+            return true;
+        }
+        return false;
     }
 
     // Returns a SharedPtr if object is still alive
@@ -112,33 +111,34 @@ public:
         }
     }
 
-    // Reset this weak pointer
     void reset() noexcept {
-        if (control_) {
-            if (control_->weak_count > 0) {
-                control_->weak_count -= 1;
+        if (m_control != nullptr) {
+            if (m_control->weak_count > 0) {
+                m_control->weak_count -= 1;
             }
-            if (control_->strong_count == 0 && control_->weak_count == 0) {
-                delete control_;
+            if (m_control->strong_count == 0) {
+                if (m_control->weak_count == 0) {
+                    delete m_control;
+                }
             }
         }
-        ptr_ = nullptr;
-        control_ = nullptr;
+        m_ptr = nullptr;
+        m_control = nullptr;
     }
 
-    // Swap two WeakPtrs
     void swap(WeakPtr& other) noexcept {
-        T* temp_ptr = ptr_;
-        ptr_ = other.ptr_;
-        other.ptr_ = temp_ptr;
-        detail::ControlBlock* temp_ctrl = control_;
-        control_ = other.control_;
-        other.control_ = temp_ctrl;
+        T* temp_ptr = m_ptr;
+        m_ptr = other.m_ptr;
+        other.m_ptr = temp_ptr;
+
+        detail::ControlBlock* temp_ctrl = m_control;
+        m_control = other.m_control;
+        other.m_control = temp_ctrl;
     }
 
 private:
-    T* ptr_;
-    detail::ControlBlock* control_;
+    T* m_ptr;
+    detail::ControlBlock* m_control;
 
     // Allow SharedPtr to access private members
     friend class SharedPtr<T>;
