@@ -13,7 +13,6 @@ public:
     using value_type = T;
     using size_type  = std::size_t;
 
-    // Node structure
     struct Node {
         T value;
         Node* prev;
@@ -26,40 +25,36 @@ public:
             : value(std::move(v)), prev(p), next(n) {}
     };
 
-    // Constructor
     LinkedList() noexcept {
-        head_ = nullptr;
-        tail_ = nullptr;
-        size_ = 0;
+        m_head = nullptr;
+        m_tail = nullptr;
+        m_size = 0;
     }
 
-    // Copy constructor
     LinkedList(const LinkedList& other) {
-        head_ = nullptr;
-        tail_ = nullptr;
-        size_ = 0;
-        Node* current = other.head_;
+        m_head = nullptr;
+        m_tail = nullptr;
+        m_size = 0;
+        Node* current = other.m_head;
         while (current != nullptr) {
             push_back(current->value);
             current = current->next;
         }
     }
 
-    // Move constructor
     LinkedList(LinkedList&& other) noexcept {
-        head_ = other.head_;
-        tail_ = other.tail_;
-        size_ = other.size_;
-        other.head_ = nullptr;
-        other.tail_ = nullptr;
-        other.size_ = 0;
+        m_head = other.m_head;
+        m_tail = other.m_tail;
+        m_size = other.m_size;
+        other.m_head = nullptr;
+        other.m_tail = nullptr;
+        other.m_size = 0;
     }
 
-    // Copy assignment
     LinkedList& operator=(const LinkedList& other) {
         if (this != &other) {
             clear();
-            Node* current = other.head_;
+            Node* current = other.m_head;
             while (current != nullptr) {
                 push_back(current->value);
                 current = current->next;
@@ -68,16 +63,15 @@ public:
         return *this;
     }
 
-    // Move assignment
     LinkedList& operator=(LinkedList&& other) noexcept {
         if (this != &other) {
             clear();
-            head_ = other.head_;
-            tail_ = other.tail_;
-            size_ = other.size_;
-            other.head_ = nullptr;
-            other.tail_ = nullptr;
-            other.size_ = 0;
+            m_head = other.m_head;
+            m_tail = other.m_tail;
+            m_size = other.m_size;
+            other.m_head = nullptr;
+            other.m_tail = nullptr;
+            other.m_size = 0;
         }
         return *this;
     }
@@ -88,138 +82,179 @@ public:
     }
 
     // Size
-    size_type size() const noexcept { return size_; }
-    bool empty() const noexcept { return size_ == 0; }
+    size_type size() const noexcept {
+        return m_size;
+    }
 
-    // Access front/back
+    bool empty() const noexcept {
+        return m_size == 0;
+    }
+
+
     T& front() {
-        if (!head_) throw std::out_of_range("List is empty");
-        return head_->value;
+        if (!m_head) {
+            throw std::out_of_range("List is empty");
+        }
+        return m_head->value;
     }
 
     const T& front() const {
-        if (!head_) throw std::out_of_range("List is empty");
-        return head_->value;
+        if (!m_head) {
+            throw std::out_of_range("List is empty");
+        }
+        return m_head->value;
     }
 
     T& back() {
-        if (!tail_) throw std::out_of_range("List is empty");
-        return tail_->value;
+        if (!m_tail) {
+            throw std::out_of_range("List is empty");
+        }
+        return m_tail->value;
     }
 
     const T& back() const {
-        if (!tail_) throw std::out_of_range("List is empty");
-        return tail_->value;
+        if (!m_tail) {
+            throw std::out_of_range("List is empty");
+        }
+        return m_tail->value;
     }
 
-    // Clear list
     void clear() noexcept {
-        Node* current = head_;
+        Node* current = m_head;
         while (current != nullptr) {
             Node* temp = current;
             current = current->next;
             delete temp;
         }
-        head_ = nullptr;
-        tail_ = nullptr;
-        size_ = 0;
+        m_head = nullptr;
+        m_tail = nullptr;
+        m_size = 0;
     }
 
-    // Push front
+
     void push_front(const T& value) {
-        Node* new_node = new Node(value, nullptr, head_);
-        if (head_ != nullptr) head_->prev = new_node;
-        head_ = new_node;
-        if (tail_ == nullptr) tail_ = new_node;
-        size_++;
+        Node* new_node = new Node(value, nullptr, m_head);
+        if (m_head != nullptr) {
+            m_head->prev = new_node;
+        }
+        m_head = new_node;
+        if (m_tail == nullptr) {
+            m_tail = new_node;
+        }
+        m_size++;
     }
 
     void push_front(T&& value) {
-        Node* new_node = new Node(std::move(value), nullptr, head_);
-        if (head_ != nullptr) head_->prev = new_node;
-        head_ = new_node;
-        if (tail_ == nullptr) tail_ = new_node;
-        size_++;
+        Node* new_node = new Node(std::move(value), nullptr, m_head);
+        if (m_head != nullptr) {
+            m_head->prev = new_node;
+        }
+        m_head = new_node;
+        if (m_tail == nullptr) {
+            m_tail = new_node;
+        }
+        m_size++;
     }
 
-    // Push back
     void push_back(const T& value) {
-        Node* new_node = new Node(value, tail_, nullptr);
-        if (tail_ != nullptr) tail_->next = new_node;
-        tail_ = new_node;
-        if (head_ == nullptr) head_ = new_node;
-        size_++;
+        Node* new_node = new Node(value, m_tail, nullptr);
+        if (m_tail != nullptr) {
+            m_tail->next = new_node;
+        }
+        m_tail = new_node;
+        if (m_head == nullptr) {
+            m_head = new_node;
+        }
+        m_size++;
     }
 
     void push_back(T&& value) {
-        Node* new_node = new Node(std::move(value), tail_, nullptr);
-        if (tail_ != nullptr) tail_->next = new_node;
-        tail_ = new_node;
-        if (head_ == nullptr) head_ = new_node;
-        size_++;
+        Node* new_node = new Node(std::move(value), m_tail, nullptr);
+        if (m_tail != nullptr) {
+            m_tail->next = new_node;
+        }
+        m_tail = new_node;
+        if (m_head == nullptr) {
+            m_head = new_node;
+        }
+        m_size++;
     }
 
-    // Emplace front
     template <typename... Args>
     void emplace_front(Args&&... args) {
-        Node* new_node = new Node(T(std::forward<Args>(args)...), nullptr, head_);
-        if (head_ != nullptr) head_->prev = new_node;
-        head_ = new_node;
-        if (tail_ == nullptr) tail_ = new_node;
-        size_++;
+        Node* new_node = new Node(T(std::forward<Args>(args)...), nullptr, m_head);
+        if (m_head != nullptr) {
+            m_head->prev = new_node;
+        }
+        m_head = new_node;
+        if (m_tail == nullptr) {
+            m_tail = new_node;
+        }
+        m_size++;
     }
 
-    // Emplace back
     template <typename... Args>
     void emplace_back(Args&&... args) {
-        Node* new_node = new Node(T(std::forward<Args>(args)...), tail_, nullptr);
-        if (tail_ != nullptr) tail_->next = new_node;
-        tail_ = new_node;
-        if (head_ == nullptr) head_ = new_node;
-        size_++;
+        Node* new_node = new Node(T(std::forward<Args>(args)...), m_tail, nullptr);
+        if (m_tail != nullptr) {
+            m_tail->next = new_node;
+        }
+        m_tail = new_node;
+        if (m_head == nullptr) {
+            m_head = new_node;
+        }
+        m_size++;
     }
 
-    // Pop front
+
     void pop_front() {
-        if (head_ == nullptr) return;
-        Node* temp = head_;
-        head_ = head_->next;
-        if (head_ != nullptr) head_->prev = nullptr;
-        else tail_ = nullptr;
+        if (m_head == nullptr) {
+            return;
+        }
+        Node* temp = m_head;
+        m_head = m_head->next;
+        if (m_head != nullptr) {
+            m_head->prev = nullptr;
+        } else {
+            m_tail = nullptr;
+        }
         delete temp;
-        size_--;
+        m_size--;
     }
 
-    // Pop back
     void pop_back() {
-        if (tail_ == nullptr) return;
-        Node* temp = tail_;
-        tail_ = tail_->prev;
-        if (tail_ != nullptr) tail_->next = nullptr;
-        else head_ = nullptr;
+        if (m_tail == nullptr) {
+            return;
+        }
+        Node* temp = m_tail;
+        m_tail = m_tail->prev;
+        if (m_tail != nullptr) {
+            m_tail->next = nullptr;
+        } else {
+            m_head = nullptr;
+        }
         delete temp;
-        size_--;
+        m_size--;
     }
 
-    // Swap two lists
     void swap(LinkedList& other) noexcept {
-        Node* temp_head = head_;
-        head_ = other.head_;
-        other.head_ = temp_head;
+        Node* temp_head = m_head;
+        m_head = other.m_head;
+        other.m_head = temp_head;
 
-        Node* temp_tail = tail_;
-        tail_ = other.tail_;
-        other.tail_ = temp_tail;
+        Node* temp_tail = m_tail;
+        m_tail = other.m_tail;
+        other.m_tail = temp_tail;
 
-        size_type temp_size = size_;
-        size_ = other.size_;
-        other.size_ = temp_size;
+        size_type temp_size = m_size;
+        m_size = other.m_size;
+        other.m_size = temp_size;
     }
 
 private:
-    Node* head_;
-    Node* tail_;
-    size_type size_;
+    Node* m_head;
+    Node* m_tail;
+    size_type m_size;
 };
 
 } // namespace softacademy
