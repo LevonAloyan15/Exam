@@ -6,7 +6,6 @@
 
 namespace softacademy {
 
-// Base abstract class
 class Shape {
 public:
     virtual ~Shape() = default;
@@ -15,7 +14,6 @@ public:
     virtual double perimeter() const = 0;
 };
 
-// Circle class
 class Circle final : public Shape {
 public:
     explicit Circle(double radius) {
@@ -30,18 +28,17 @@ public:
     }
 
     double area() const override {
-        return 3.14159265358979323846 * m_radius * m_radius;
+        return 3.14 * m_radius * m_radius;
     }
 
     double perimeter() const override {
-        return 2 * 3.14159265358979323846 * m_radius;
+        return 2 * 3.14* m_radius;
     }
 
-private:
+public:
     double m_radius;
 };
 
-// Rectangle class
 class Rectangle final : public Shape {
 public:
     Rectangle(double width, double height) {
@@ -68,12 +65,11 @@ public:
         return 2 * (m_width + m_height);
     }
 
-private:
+public:
     double m_width;
     double m_height;
 };
 
-// Triangle class
 class Triangle final : public Shape {
 public:
     Triangle(double a, double b, double c) {
@@ -101,14 +97,18 @@ public:
         return std::sqrt(s * (s - m_a) * (s - m_b) * (s - m_c));
     }
 
-private:
+public:
     double m_a;
     double m_b;
     double m_c;
 
-    // Simple helper moved here, kept private because it's part of construction validation
+private:
     bool valid_triangle(double a, double b, double c) const noexcept {
-        return (a + b > c) && (a + c > b) && (b + c > a);
+        if ((a + b > c) && (a + c > b) && (b + c > a)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 };
 
