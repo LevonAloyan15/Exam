@@ -13,8 +13,11 @@ public:
     using value_type = T;
     using size_type  = std::size_t;
 
-    // Constructors
-    Vector() noexcept : m_data(nullptr), m_size(0), m_capacity(0) {}
+    Vector() noexcept {
+        m_data = nullptr;
+        m_size = 0;
+        m_capacity = 0;
+    }
 
     explicit Vector(size_type count) {
         if (count == 0) {
@@ -95,38 +98,66 @@ public:
         delete[] m_data;
     }
 
-    // Size and capacity
-    size_type size() const noexcept { return m_size; }
-    size_type capacity() const noexcept { return m_capacity; }
-    bool empty() const noexcept { return m_size == 0; }
+    size_type size() const noexcept {
+        return m_size;
+    }
 
-    // Element access
-    T& operator[](size_type index) { return m_data[index]; }
-    const T& operator[](size_type index) const { return m_data[index]; }
+    size_type capacity() const noexcept {
+        return m_capacity;
+    }
+
+    bool empty() const noexcept {
+        return m_size == 0;
+    }
+
+    T& operator[](size_type index) {
+        return m_data[index];
+    }
+
+    const T& operator[](size_type index) const {
+        return m_data[index];
+    }
 
     T& at(size_type index) {
-        if (index >= m_size) throw std::out_of_range("Vector::at");
+        if (index >= m_size) {
+            throw std::out_of_range("Vector::at");
+        }
         return m_data[index];
     }
 
     const T& at(size_type index) const {
-        if (index >= m_size) throw std::out_of_range("Vector::at");
+        if (index >= m_size) {
+            throw std::out_of_range("Vector::at");
+        }
         return m_data[index];
     }
 
-    T& front() { return m_data[0]; }
-    const T& front() const { return m_data[0]; }
+    T& front() {
+        return m_data[0];
+    }
 
-    T& back() { return m_data[m_size - 1]; }
-    const T& back() const { return m_data[m_size - 1]; }
+    const T& front() const {
+        return m_data[0];
+    }
 
-    T* data() noexcept { return m_data; }
-    const T* data() const noexcept { return m_data; }
+    T& back() {
+        return m_data[m_size - 1];
+    }
 
-    // Push back (copy)
+    const T& back() const {
+        return m_data[m_size - 1];
+    }
+
+    T* data() noexcept {
+        return m_data;
+    }
+
+    const T* data() const noexcept {
+        return m_data;
+    }
+
     void push_back(const T& value) {
         if (m_size >= m_capacity) {
-            // Increase capacity by 5
             size_type new_capacity = m_capacity + 5;
             T* new_data = new T[new_capacity];
             for (size_type i = 0; i < m_size; ++i) {
@@ -140,7 +171,6 @@ public:
         m_size += 1;
     }
 
-    // Push back (move)
     void push_back(T&& value) {
         if (m_size >= m_capacity) {
             size_type new_capacity = m_capacity + 5;
@@ -156,7 +186,6 @@ public:
         m_size += 1;
     }
 
-    // Emplace back
     template <typename... Args>
     void emplace_back(Args&&... args) {
         if (m_size >= m_capacity) {
@@ -173,12 +202,12 @@ public:
         m_size += 1;
     }
 
-    // Pop back
     void pop_back() {
-        if (m_size > 0) --m_size;
+        if (m_size > 0) {
+            m_size -= 1;
+        }
     }
 
-    // Resize
     void resize(size_type new_size, const T& value = T()) {
         if (new_size > m_capacity) {
             T* new_data = new T[new_size];
@@ -195,12 +224,11 @@ public:
         m_size = new_size;
     }
 
-    // Clear
+    
     void clear() noexcept {
         m_size = 0;
     }
 
-    // Swap
     void swap(Vector& other) noexcept {
         T* temp_data = m_data;
         m_data = other.m_data;
@@ -215,7 +243,7 @@ public:
         other.m_capacity = temp_capacity;
     }
 
-private:
+public:
     T* m_data;
     size_type m_size;
     size_type m_capacity;
