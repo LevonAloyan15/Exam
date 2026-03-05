@@ -140,7 +140,7 @@ private:
     T* m_ptr;
     detail::ControlBlock* m_control;
 
-    // Allow SharedPtr to access private members
+
     friend class SharedPtr<T>;
 };
 
