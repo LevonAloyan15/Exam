@@ -76,12 +76,10 @@ public:
         return *this;
     }
 
-    // Destructor
     ~LinkedList() {
         clear();
     }
 
-    // Size
     size_type size() const noexcept {
         return m_size;
     }
