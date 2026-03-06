@@ -1,5 +1,4 @@
-#ifndef SOFTACADEMY_LIST_HPP
-#define SOFTACADEMY_LIST_HPP
+
 
 #include <cstddef>
 #include <utility>
@@ -233,4 +232,4 @@ private:
 
 } // namespace softacademy
 
-#endif
+
