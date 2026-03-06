@@ -1,5 +1,4 @@
-#ifndef SOFTACADEMY_VECTOR_HPP
-#define SOFTACADEMY_VECTOR_HPP
+
 
 #include <cstddef>
 #include <stdexcept>
@@ -251,4 +250,4 @@ public:
 
 } // namespace softacademy
 
-#endif
+
