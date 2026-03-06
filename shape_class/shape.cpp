@@ -1,5 +1,4 @@
-#ifndef SOFTACADEMY_SHAPES_HPP
-#define SOFTACADEMY_SHAPES_HPP
+
 
 #include <stdexcept>
 #include <cmath>
@@ -114,4 +113,3 @@ private:
 
 } // namespace softacademy
 
-#endif
