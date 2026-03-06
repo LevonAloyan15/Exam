@@ -178,31 +178,7 @@ public:
         m_size++;
     }
 
-    template <typename... Args>
-    void emplace_front(Args&&... args) {
-        Node* new_node = new Node(T(std::forward<Args>(args)...), nullptr, m_head);
-        if (m_head != nullptr) {
-            m_head->prev = new_node;
-        }
-        m_head = new_node;
-        if (m_tail == nullptr) {
-            m_tail = new_node;
-        }
-        m_size++;
-    }
-
-    template <typename... Args>
-    void emplace_back(Args&&... args) {
-        Node* new_node = new Node(T(std::forward<Args>(args)...), m_tail, nullptr);
-        if (m_tail != nullptr) {
-            m_tail->next = new_node;
-        }
-        m_tail = new_node;
-        if (m_head == nullptr) {
-            m_head = new_node;
-        }
-        m_size++;
-    }
+    
 
 
     void pop_front() {
