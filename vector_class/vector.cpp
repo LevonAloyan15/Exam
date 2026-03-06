@@ -25,7 +25,7 @@ public:
             m_capacity = 0;
         } else {
             m_data = new T[count];
-            for (size_type i = 0; i < count; ++i) {
+            for (size_type i = 0; i < count; i++) {
                 m_data[i] = T();
             }
             m_size = count;
@@ -40,7 +40,7 @@ public:
             m_capacity = 0;
         } else {
             m_data = new T[other.m_size];
-            for (size_type i = 0; i < other.m_size; ++i) {
+            for (size_type i = 0; i < other.m_size;i++) {
                 m_data[i] = other.m_data[i];
             }
             m_size = other.m_size;
@@ -68,7 +68,7 @@ public:
                 m_capacity = 0;
             } else {
                 m_data = new T[other.m_size];
-                for (size_type i = 0; i < other.m_size; ++i) {
+                for (size_type i = 0; i < other.m_size;i++) {
                     m_data[i] = other.m_data[i];
                 }
                 m_size = other.m_size;
@@ -157,9 +157,9 @@ public:
 
     void push_back(const T& value) {
         if (m_size >= m_capacity) {
-            size_type new_capacity = m_capacity + 5;
+            size_type new_capacity = m_capacity * 2;
             T* new_data = new T[new_capacity];
-            for (size_type i = 0; i < m_size; ++i) {
+            for (size_type i = 0; i < m_size;i++) {
                 new_data[i] = std::move(m_data[i]);
             }
             delete[] m_data;
@@ -172,9 +172,9 @@ public:
 
     void push_back(T&& value) {
         if (m_size >= m_capacity) {
-            size_type new_capacity = m_capacity + 5;
+            size_type new_capacity = m_capacity * 2;
             T* new_data = new T[new_capacity];
-            for (size_type i = 0; i < m_size; ++i) {
+            for (size_type i = 0; i < m_size; i++) {
                 new_data[i] = std::move(m_data[i]);
             }
             delete[] m_data;
@@ -185,21 +185,6 @@ public:
         m_size += 1;
     }
 
-    template <typename... Args>
-    void emplace_back(Args&&... args) {
-        if (m_size >= m_capacity) {
-            size_type new_capacity = m_capacity + 5;
-            T* new_data = new T[new_capacity];
-            for (size_type i = 0; i < m_size; ++i) {
-                new_data[i] = std::move(m_data[i]);
-            }
-            delete[] m_data;
-            m_data = new_data;
-            m_capacity = new_capacity;
-        }
-        m_data[m_size] = T(std::forward<Args>(args)...);
-        m_size += 1;
-    }
 
     void pop_back() {
         if (m_size > 0) {
