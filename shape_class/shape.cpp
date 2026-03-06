@@ -34,7 +34,7 @@ public:
         return 2 * 3.14* m_radius;
     }
 
-public:
+private:
     double m_radius;
 };
 
@@ -64,7 +64,7 @@ public:
         return 2 * (m_width + m_height);
     }
 
-public:
+private:
     double m_width;
     double m_height;
 };
@@ -96,7 +96,7 @@ public:
         return std::sqrt(s * (s - m_a) * (s - m_b) * (s - m_c));
     }
 
-public:
+private:
     double m_a;
     double m_b;
     double m_c;
